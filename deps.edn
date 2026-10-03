@@ -25,9 +25,10 @@
            ;; kit Libs
            io.github.kit-clj/kit-core {:mvn/version "1.0.10"}
            io.github.kit-clj/kit-undertow {:mvn/version "1.0.14"}
- :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.12"}}
            hiccup/hiccup {:mvn/version "2.0.0"}
            org.clojure/data.xml {:mvn/version "0.2.0-alpha11"}}
+ :aliases {:build {:deps {org.clojure/clojure {:mvn/version "1.12.4"}
+                          io.github.clojure/tools.build {:mvn/version "0.10.12"}}
                    :ns-default build}
 
            :dev  {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.6.58"}
