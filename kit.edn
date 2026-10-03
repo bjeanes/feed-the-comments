@@ -1,0 +1,8 @@
+{:full-name "bjeanes/feed-the-comments"
+ :ns-name   "bjeanes.feed-the-comments"
+ :sanitized "bjeanes/feed_the_comments"
+ :name      "feed-the-comments"
+ :modules   {:root         "modules"
+             :repositories [{:url  "https://github.com/kit-clj/modules.git"
+                             :tag  "master"
+                             :name "kit-modules"}]}}
