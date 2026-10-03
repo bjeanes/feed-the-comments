@@ -10,7 +10,8 @@
    [bjeanes.feed-the-comments.web.handler]
 
     ;; Routes
-   [bjeanes.feed-the-comments.web.routes.api])
+   [bjeanes.feed-the-comments.web.routes.api] 
+    [bjeanes.feed-the-comments.web.routes.ui])
   (:gen-class))
 
 ;; log uncaught exceptions in threads
