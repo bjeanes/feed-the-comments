@@ -4,12 +4,12 @@
    [bjeanes.feed-the-comments.web.htmx :refer [fragment page] :as htmx]
    [bjeanes.feed-the-comments.web.middleware.exception :as exception]
    [bjeanes.feed-the-comments.web.routes.api :as api]
-   [bjeanes.feed-the-comments.web.routes.utils :refer [url-for]]
+   [bjeanes.feed-the-comments.web.routes.utils :refer [path-for url-for]]
    [integrant.core :as ig]
    [reitit.ring.middleware.parameters :as parameters]
    [ring.util.http-response :as http-response]))
 
-(defn home [_request]
+(defn home [request]
   (page {:lang "en"}
         [:head
          [:meta {:charset "UTF-8"}]
@@ -19,7 +19,7 @@
          [:h1 "Feed The Comments"]
          [:div "Proxy an RSS feed to promote the " [:code "<comments>"] " to the main " [:code "<link>"]
           ", for clients which don't have an option to link to the comments instead of the main article."]
-         [:input {:hx-query "/feed-url"
+         [:input {:hx-query (path-for request ::feed-url)
                   :hx-target "#result"
                   :hx-trigger "load, input changed delay:250ms"
                   :name "feed-url"
@@ -38,7 +38,8 @@
 ;; Routes
 (defn ui-routes [_opts]
   [["/" {:get #'home}]
-   ["/feed-url" {:query #'feed-url}]])
+   ["/feed-url" {:name ::feed-url
+                 :query #'feed-url}]])
 
 (def route-data
   {:middleware

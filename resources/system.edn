@@ -11,8 +11,17 @@
  :handler/ring
  {:router #ig/ref :router/core
   :cookie-secret #or [#env COOKIE_SECRET "VAQPKXNBSQZICBFL"]
+  ;; where the app is reached from outside, for generated URLs only (routes are
+  ;; always matched unprefixed). A full URL ("https://example.com/feeds") fixes
+  ;; the origin and path prefix; a path ("/feeds") fixes only the prefix.
+  :public-url #env PUBLIC_URL
   ;; from ring.middleware.defaults. anti-forgery `false` by default because services may not require it
-  :site-defaults-config {:params {:urlencoded true
+  :site-defaults-config {;; trust X-Forwarded-* headers set by a reverse proxy
+                         :proxy #boolean #or [#env TRUST_PROXY_HEADERS
+                                              #profile {:prod true
+                                                        :dev false
+                                                        :test false}]
+                         :params {:urlencoded true
                                   :multipart true
                                   :nested true
                                   :keywordize true}
