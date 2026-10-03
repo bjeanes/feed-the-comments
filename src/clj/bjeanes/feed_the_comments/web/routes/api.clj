@@ -1,47 +1,31 @@
 (ns bjeanes.feed-the-comments.web.routes.api
   (:require
-    [bjeanes.feed-the-comments.web.controllers.health :as health]
-    [bjeanes.feed-the-comments.web.middleware.exception :as exception]
-    [bjeanes.feed-the-comments.web.middleware.formats :as formats]
-    [integrant.core :as ig]
-    [reitit.coercion.malli :as malli]
-    [reitit.ring.coercion :as coercion]
-    [reitit.ring.middleware.muuntaja :as muuntaja]
-    [reitit.ring.middleware.parameters :as parameters]
-    [reitit.swagger :as swagger]))
+   [bjeanes.feed-the-comments.web.controllers.health :as health]
+   [bjeanes.feed-the-comments.web.controllers.feed :as feed]
+   [bjeanes.feed-the-comments.web.middleware.exception :as exception]
+   [integrant.core :as ig]
+   [reitit.coercion.malli :as malli]
+   [reitit.ring.coercion :as coercion]
+   [reitit.ring.middleware.parameters :as parameters]))
 
 (def route-data
-  {:coercion   malli/coercion
-   :muuntaja   formats/instance
-   :swagger    {:id ::api}
+  {;:coercion   malli/coercion
    :middleware [;; query-params & form-params
                 parameters/parameters-middleware
-                  ;; content-negotiation
-                muuntaja/format-negotiate-middleware
-                  ;; encoding response body
-                muuntaja/format-response-middleware
-                  ;; exception handling
-                coercion/coerce-exceptions-middleware
-                  ;; decoding request body
-                muuntaja/format-request-middleware
-                  ;; coercing response bodys
-                coercion/coerce-response-middleware
-                  ;; coercing request parameters
-                coercion/coerce-request-middleware
-                  ;; exception handling
+                ;; exception handling
+                ; coercion/coerce-exceptions-middleware
+                ; ;; coercing response bodys
+                ; coercion/coerce-response-middleware
+                ; ;; coercing request parameters
+                ; coercion/coerce-request-middleware
+                ;; exception handling
                 exception/wrap-exception]})
 
 ;; Routes
 (defn api-routes [_opts]
-  [["/swagger.json"
-    {:get {:no-doc  true
-           :swagger {:info {:title "bjeanes.feed-the-comments API"}}
-           :handler (swagger/create-swagger-handler)}}]
-   ["/health"
-    ;; note that use of the var is necessary
-    ;; for reitit to reload routes without
-    ;; restarting the system
-    {:get #'health/healthcheck!}]])
+  [["/health" {:get #'health/healthcheck!}]
+   ["/feed/:encoded-feed-url" {:name ::feed
+                               :get #'feed/proxy-feed}]])
 
 (derive :reitit.routes/api :reitit/routes)
 

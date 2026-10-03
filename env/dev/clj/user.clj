@@ -1,17 +1,18 @@
 (ns user
   "Userspace functions you can run by default in your local REPL."
   (:require
-    [clojure.pprint]
-    [clojure.spec.alpha :as s]
-    [clojure.tools.namespace.repl :as repl]
-    [criterium.core :as c]                                  ;; benchmarking
-    [expound.alpha :as expound]
-    [integrant.core :as ig]
-    [integrant.repl :refer [clear go halt prep init reset reset-all]]
-    [integrant.repl.state :as state]
-    [kit.api :as kit]
-    [lambdaisland.classpath :as licp]
-    [bjeanes.feed-the-comments.core :refer [start-app]]))
+   [bjeanes.feed-the-comments.core :refer [start-app]]
+   [clojure.pprint]
+   [clojure.spec.alpha :as s]
+   [clojure.tools.namespace.repl :as repl]
+   [criterium.core :as c]                                  ;; benchmarking
+   [expound.alpha :as expound]
+   [integrant.core :as ig]
+   [integrant.repl :refer [clear go halt prep init reset reset-all]]
+   [integrant.repl.state :as state]
+   [kit.api :as kit]
+   [lambdaisland.classpath :as licp]
+   [portal.api :as portal]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 
@@ -38,7 +39,13 @@
 
 (def refresh repl/refresh)
 
+(defn portal! []
+  (portal/open)
+  (add-tap #'portal/submit))
 
+(defn close-portal []
+  (remove-tap #'portal/submit)
+  (portal/close))
 
 (defn update-deps
   "Refresh classpath to pick up deps.edn changes."
