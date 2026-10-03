@@ -1,11 +1,14 @@
 (ns bjeanes.feed-the-comments.web.htmx
   (:require
    [ring.util.http-response :as http-response]
-   [hiccup.core :as h]
-   [hiccup.page :as p]))
+   [hiccup2.core :as h]))
 
 (defmacro page [opts & content]
-  `(-> (p/html5 ~opts ~@content)
+  `(-> (str (h/html ~opts
+                    (h/raw "<!DOCTYPE html>\n")
+                    [:html {:lang "en"}
+                     [:head [:meta {:charset "utf-8"}]]
+                     [:body ~@content]]))
        http-response/ok
        (http-response/content-type "text/html")))
 
